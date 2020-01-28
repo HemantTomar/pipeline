@@ -1,31 +1,58 @@
 pipeline {
-    agent any
-    stages {
-        stage('Build Application') {
-            steps {
-                sh 'mvn -f java-tomcat-sample/pom.xml clean package'
-            }
-            post {
-                success {
-                    echo "Now Archiving the Artifacts...."
-                    archiveArtifacts artifacts: '**/*.war'
-                }
-            }
-        }
-        stage('Deploy in Staging Environment'){
-            steps{
-                build job: 'Deploy_Application_Staging_Env'
+
+      agent any
+
+      stages {
+
+            stage('GIT') {
+
+                  steps {
+
+                        echo 'Hi, this is Hemant from 3Pillar'
+
+                        echo 'We are Starting the Testing'
+                        git 'https://github.com/HemantTomar/pipeline.git'
+
+                  }
 
             }
-            
-        }
-        stage('Deploy to Production'){
-            steps{
-                timeout(time:5, unit:'DAYS'){
-                    input message:'Approve PRODUCTION Deployment?'
-                }
-                build job: 'Deploy_Application_Prod_Env'
+            stage('COMPILE_packege') {
+
+                  steps {
+
+                        echo 'COMPILE THE FILE'
+                        tool name: 'Local_maven', type: 'maven'
+                        sh 'mvn -f pom.xml package'
+                        
+
+
+                  }
+
             }
-        }
-    }
+
+            stage('Build') {
+
+                  steps {
+
+                        echo 'Building Sample Maven Project'
+                        archiveArtifacts '**/*.war'
+
+                  }
+
+            }
+            stage('Deploy') {
+
+                  steps {
+
+                        echo 'Deploying Sample Maven Project'
+                        copyArtifacts filter: '**/*.war', fingerprintArtifacts: true, projectName: 'First-pipeline'
+                        deploy adapters: [tomcat9(credentialsId: 'eb4b742d-2197-4c9e-9c71-07cd27a5a9b9', path: '', url: 'http://3.17.129.44:9090/')], contextPath: '/', war: '**/*.war'
+
+                  }
+
+            }
+
+
+      }
+
 }
