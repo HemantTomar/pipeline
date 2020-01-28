@@ -45,7 +45,7 @@ pipeline {
                   steps {
 
                         echo 'Testing'
-                        emailext body: 'hi', recipientProviders: [upstreamDevelopers()], subject: 'commited', to: 'satyam.srivastava_cs16@gla.ac.in'
+                       
 
                   }
 
@@ -55,7 +55,7 @@ pipeline {
                   steps {
 
                         echo 'Deploying Sample Maven Project'
-                        copyArtifacts filter: '**/*.war', fingerprintArtifacts: true, projectName: 'pipeline'
+                        copyArtifacts filter: '**/*.war', fingerprintArtifacts: true, projectName: 'pipeline', selector: lastWithArtifacts()
                         deploy adapters: [tomcat9(credentialsId: 'eb4b742d-2197-4c9e-9c71-07cd27a5a9b9', path: '', url: 'http://3.17.129.44:9090/')], contextPath: '/', war: '**/*.war'
 
                   }
