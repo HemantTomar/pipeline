@@ -40,6 +40,16 @@ pipeline {
                   }
 
             }
+            stage('Test') {
+
+                  steps {
+
+                        echo 'Testing'
+                        emailext body: 'hi', recipientProviders: [upstreamDevelopers()], subject: 'commited', to: 'satyam.srivastava_cs16@gla.ac.in'
+
+                  }
+
+            }
             stage('Deploy') {
 
                   steps {
