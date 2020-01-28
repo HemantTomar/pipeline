@@ -45,7 +45,7 @@ pipeline {
                   steps {
 
                         echo 'Testing'
-                        junit '/var/lib/jenkins/workspace/pipeline/java-tomcat-sample/target/test/*.xml'
+                        junit '/var/lib/jenkins/workspace/pipeline/java-tomcat-sample/target/*.xml'
                        
 
                   }
