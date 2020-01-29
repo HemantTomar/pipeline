@@ -45,7 +45,7 @@ pipeline {
                   steps {
 
                         echo 'Testing'
-                        junit '**/*.xml'
+                       junit 'java-tomcat-sample/target/surefire-reports/*.xml'
                        
 
                   }
